@@ -126,6 +126,8 @@ SemanticDiagnostics::
 *refresh*    /user/username/projects/myproject/a.js
 *refresh*    /user/username/projects/myproject/b.ts
 Signatures::
+(computed .d.ts) /user/username/projects/myproject/a.js
+(computed .d.ts) /user/username/projects/myproject/b.ts
 
 
 Edit [0]:: No change
@@ -252,3 +254,4 @@ SemanticDiagnostics::
 *refresh*    /user/username/projects/myproject/a.js
 Signatures::
 (computed .d.ts) /user/username/projects/myproject/a.js
+(computed .d.ts) /user/username/projects/myproject/b.ts

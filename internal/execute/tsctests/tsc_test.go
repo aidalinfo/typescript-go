@@ -3788,6 +3788,37 @@ func TestTscNoEmit(t *testing.T) {
 				commandLineArgs: []string{"--noEmit"},
 				edits:           noChangeOnlyEdit,
 			},
+			{
+				subScenario: "comment change in imported module with noEmit incremental",
+				files: FileMap{
+					"/home/src/workspaces/project/tsconfig.json": stringtestutil.Dedent(`
+						{
+							"compilerOptions": {
+								"incremental": true,
+								"noEmit": true,
+								"strict": true,
+								"module": "esnext"
+							}
+						}`),
+					"/home/src/workspaces/project/hub.ts": stringtestutil.Dedent(`
+						export interface Box {
+							value: string;
+						}
+						export const make = (): Box => ({ value: "ok" });
+					`),
+					"/home/src/workspaces/project/spoke1.ts": `import { make, type Box } from "./hub"; export const v1: Box = make();`,
+					"/home/src/workspaces/project/spoke2.ts": `import { make, type Box } from "./hub"; export const v2: Box = make();`,
+					"/home/src/workspaces/project/spoke3.ts": `import { make, type Box } from "./hub"; export const v3: Box = make();`,
+				},
+				edits: []*tscEdit{
+					{
+						caption: "comment change in hub",
+						edit: func(sys *TestSys) {
+							sys.appendFile("/home/src/workspaces/project/hub.ts", "\n// comment only change\n")
+						},
+					},
+				},
+			},
 			getTscNoEmitLoopTestCase("", []string{"-b", "-w", "-verbose"}),
 			getTscNoEmitLoopTestCase(" with incremental", []string{"-b", "-w", "-verbose", "--incremental"}),
 		},

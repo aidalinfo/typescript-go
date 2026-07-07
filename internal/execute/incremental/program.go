@@ -305,6 +305,10 @@ func (p *Program) emitBuildInfo(ctx context.Context, options compiler.EmitOption
 	if ctx.Err() != nil {
 		return nil
 	}
+	p.ensureNoEmitSignaturesForBuildInfo(ctx)
+	if ctx.Err() != nil {
+		return nil
+	}
 	buildInfo := snapshotToBuildInfo(p.snapshot, p.program, buildInfoFileName)
 	text, err := json.Marshal(buildInfo)
 	if err != nil {
@@ -330,6 +334,37 @@ func (p *Program) emitBuildInfo(ctx context.Context, options compiler.EmitOption
 		EmitSkipped:  false,
 		EmittedFiles: []string{buildInfoFileName},
 	}
+}
+
+func (p *Program) ensureNoEmitSignaturesForBuildInfo(ctx context.Context) {
+	if !p.snapshot.options.NoEmit.IsTrue() || p.snapshot.options.NoCheck.IsTrue() || !p.snapshot.canUseIncrementalState() {
+		return
+	}
+
+	handler := affectedFilesHandler{ctx: ctx, program: p}
+	wg := core.NewWorkGroup(p.program.SingleThreaded())
+	for _, file := range p.program.GetSourceFiles() {
+		if file.IsDeclarationFile || ast.IsJsonSourceFile(file) || !p.program.SourceFileMayBeEmitted(file, false) {
+			continue
+		}
+		info, ok := p.snapshot.fileInfos.Load(file.Path())
+		if !ok || info.signature != info.version {
+			continue
+		}
+		wg.Queue(func() {
+			handler.updateShapeSignature(file, false)
+		})
+	}
+	wg.RunAndWait()
+	handler.updatedSignatures.Range(func(filePath tspath.Path, update *updatedSignature) bool {
+		if info, ok := p.snapshot.fileInfos.Load(filePath); ok {
+			info.signature = update.signature
+			if p.testingData != nil {
+				p.testingData.UpdatedSignatureKinds[filePath] = update.kind
+			}
+		}
+		return true
+	})
 }
 
 func (p *Program) ensureHasErrorsForState(ctx context.Context, program *compiler.Program) {
