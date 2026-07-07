@@ -337,7 +337,7 @@ func (p *Program) emitBuildInfo(ctx context.Context, options compiler.EmitOption
 }
 
 func (p *Program) ensureNoEmitSignaturesForBuildInfo(ctx context.Context) {
-	if !p.snapshot.options.NoEmit.IsTrue() || p.snapshot.options.NoCheck.IsTrue() || !p.snapshot.canUseIncrementalState() {
+	if !p.snapshot.options.NoEmit.IsTrue() || p.snapshot.options.NoCheck.IsTrue() || p.snapshot.options.IsolatedModules.IsTrue() || !p.snapshot.canUseIncrementalState() {
 		return
 	}
 
@@ -349,6 +349,9 @@ func (p *Program) ensureNoEmitSignaturesForBuildInfo(ctx context.Context) {
 		}
 		info, ok := p.snapshot.fileInfos.Load(file.Path())
 		if !ok || info.signature != info.version {
+			continue
+		}
+		if !info.affectsGlobalScope && !p.hasMultipleReferencingFiles(file.Path()) {
 			continue
 		}
 		wg.Queue(func() {
@@ -365,6 +368,17 @@ func (p *Program) ensureNoEmitSignaturesForBuildInfo(ctx context.Context) {
 		}
 		return true
 	})
+}
+
+func (p *Program) hasMultipleReferencingFiles(path tspath.Path) bool {
+	count := 0
+	for range p.snapshot.referencedMap.getReferencedBy(path) {
+		count++
+		if count > 1 {
+			return true
+		}
+	}
+	return false
 }
 
 func (p *Program) ensureHasErrorsForState(ctx context.Context, program *compiler.Program) {
