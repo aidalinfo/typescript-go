@@ -49,7 +49,7 @@ interface Symbol {
 }
 declare const console: { log(msg: any): void; };
 //// [/home/src/workspaces/project/tsconfig.tsbuildinfo] *new* 
-{"version":"FakeTSVersion","root":[[2,5]],"fileNames":["lib.es2025.full.d.ts","./hub.ts","./spoke1.ts","./spoke2.ts","./spoke3.ts"],"fileInfos":[{"version":"8859c12c614ce56ba9a18e58384a198f-/// <reference no-default-lib=\"true\"/>\ninterface Boolean {}\ninterface Function {}\ninterface CallableFunction {}\ninterface NewableFunction {}\ninterface IArguments {}\ninterface Number { toExponential: any; }\ninterface Object {}\ninterface RegExp {}\ninterface String { charAt: any; }\ninterface Array<T> { length: number; [n: number]: T; }\ninterface ReadonlyArray<T> {}\ninterface SymbolConstructor {\n    (desc?: string | number): symbol;\n    for(name: string): symbol;\n    readonly toStringTag: symbol;\n}\ndeclare var Symbol: SymbolConstructor;\ninterface Symbol {\n    readonly [Symbol.toStringTag]: string;\n}\ndeclare const console: { log(msg: any): void; };","affectsGlobalScope":true,"impliedNodeFormat":1},{"version":"235f14c81060fc2849cb75a65ec4e9c8-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });","signature":"44472c8b67bd6237e0d068a714901d29-export interface Box {\n    value: string;\n}\nexport declare const make: () => Box;\n","impliedNodeFormat":1},"1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();","e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();","232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();"],"fileIdsList":[[2]],"options":{"module":99,"strict":true},"referencedMap":[[3,1],[4,1],[5,1]],"affectedFilesPendingEmit":[2,3,4,5]}
+{"version":"FakeTSVersion","root":[[2,5]],"fileNames":["lib.es2025.full.d.ts","./hub.ts","./spoke1.ts","./spoke2.ts","./spoke3.ts"],"fileInfos":[{"version":"8859c12c614ce56ba9a18e58384a198f-/// <reference no-default-lib=\"true\"/>\ninterface Boolean {}\ninterface Function {}\ninterface CallableFunction {}\ninterface NewableFunction {}\ninterface IArguments {}\ninterface Number { toExponential: any; }\ninterface Object {}\ninterface RegExp {}\ninterface String { charAt: any; }\ninterface Array<T> { length: number; [n: number]: T; }\ninterface ReadonlyArray<T> {}\ninterface SymbolConstructor {\n    (desc?: string | number): symbol;\n    for(name: string): symbol;\n    readonly toStringTag: symbol;\n}\ndeclare var Symbol: SymbolConstructor;\ninterface Symbol {\n    readonly [Symbol.toStringTag]: string;\n}\ndeclare const console: { log(msg: any): void; };","affectsGlobalScope":true,"impliedNodeFormat":1},"235f14c81060fc2849cb75a65ec4e9c8-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });","1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();","e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();","232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();"],"fileIdsList":[[2]],"options":{"module":99,"strict":true},"referencedMap":[[3,1],[4,1],[5,1]],"affectedFilesPendingEmit":[2,3,4,5]}
 //// [/home/src/workspaces/project/tsconfig.tsbuildinfo.readable.baseline.txt] *new* 
 {
   "version": "FakeTSVersion",
@@ -90,13 +90,8 @@ declare const console: { log(msg: any): void; };
     {
       "fileName": "./hub.ts",
       "version": "235f14c81060fc2849cb75a65ec4e9c8-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });",
-      "signature": "44472c8b67bd6237e0d068a714901d29-export interface Box {\n    value: string;\n}\nexport declare const make: () => Box;\n",
-      "impliedNodeFormat": "CommonJS",
-      "original": {
-        "version": "235f14c81060fc2849cb75a65ec4e9c8-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });",
-        "signature": "44472c8b67bd6237e0d068a714901d29-export interface Box {\n    value: string;\n}\nexport declare const make: () => Box;\n",
-        "impliedNodeFormat": 1
-      }
+      "signature": "235f14c81060fc2849cb75a65ec4e9c8-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });",
+      "impliedNodeFormat": "CommonJS"
     },
     {
       "fileName": "./spoke1.ts",
@@ -159,7 +154,7 @@ declare const console: { log(msg: any): void; };
       5
     ]
   ],
-  "size": 1673
+  "size": 1505
 }
 
 tsconfig.json::
@@ -170,7 +165,6 @@ SemanticDiagnostics::
 *refresh*    /home/src/workspaces/project/spoke2.ts
 *refresh*    /home/src/workspaces/project/spoke3.ts
 Signatures::
-(computed .d.ts) /home/src/workspaces/project/hub.ts
 
 
 Edit [0]:: comment change in hub
@@ -186,7 +180,7 @@ tsgo
 ExitStatus:: Success
 Output::
 //// [/home/src/workspaces/project/tsconfig.tsbuildinfo] *modified* 
-{"version":"FakeTSVersion","root":[[2,5]],"fileNames":["lib.es2025.full.d.ts","./hub.ts","./spoke1.ts","./spoke2.ts","./spoke3.ts"],"fileInfos":[{"version":"8859c12c614ce56ba9a18e58384a198f-/// <reference no-default-lib=\"true\"/>\ninterface Boolean {}\ninterface Function {}\ninterface CallableFunction {}\ninterface NewableFunction {}\ninterface IArguments {}\ninterface Number { toExponential: any; }\ninterface Object {}\ninterface RegExp {}\ninterface String { charAt: any; }\ninterface Array<T> { length: number; [n: number]: T; }\ninterface ReadonlyArray<T> {}\ninterface SymbolConstructor {\n    (desc?: string | number): symbol;\n    for(name: string): symbol;\n    readonly toStringTag: symbol;\n}\ndeclare var Symbol: SymbolConstructor;\ninterface Symbol {\n    readonly [Symbol.toStringTag]: string;\n}\ndeclare const console: { log(msg: any): void; };","affectsGlobalScope":true,"impliedNodeFormat":1},{"version":"fd6ba6c40dfdc250f86ff17cf5a8dd45-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });\n// comment only change\n","signature":"44472c8b67bd6237e0d068a714901d29-export interface Box {\n    value: string;\n}\nexport declare const make: () => Box;\n","impliedNodeFormat":1},"1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();","e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();","232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();"],"fileIdsList":[[2]],"options":{"module":99,"strict":true},"referencedMap":[[3,1],[4,1],[5,1]],"affectedFilesPendingEmit":[2,3,4,5]}
+{"version":"FakeTSVersion","root":[[2,5]],"fileNames":["lib.es2025.full.d.ts","./hub.ts","./spoke1.ts","./spoke2.ts","./spoke3.ts"],"fileInfos":[{"version":"8859c12c614ce56ba9a18e58384a198f-/// <reference no-default-lib=\"true\"/>\ninterface Boolean {}\ninterface Function {}\ninterface CallableFunction {}\ninterface NewableFunction {}\ninterface IArguments {}\ninterface Number { toExponential: any; }\ninterface Object {}\ninterface RegExp {}\ninterface String { charAt: any; }\ninterface Array<T> { length: number; [n: number]: T; }\ninterface ReadonlyArray<T> {}\ninterface SymbolConstructor {\n    (desc?: string | number): symbol;\n    for(name: string): symbol;\n    readonly toStringTag: symbol;\n}\ndeclare var Symbol: SymbolConstructor;\ninterface Symbol {\n    readonly [Symbol.toStringTag]: string;\n}\ndeclare const console: { log(msg: any): void; };","affectsGlobalScope":true,"impliedNodeFormat":1},{"version":"fd6ba6c40dfdc250f86ff17cf5a8dd45-export interface Box {\n    value: string;\n}\nexport const make = (): Box => ({ value: \"ok\" });\n// comment only change\n","signature":"44472c8b67bd6237e0d068a714901d29-export interface Box {\n    value: string;\n}\nexport declare const make: () => Box;\n","impliedNodeFormat":1},{"version":"1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();","signature":"556c60ab8e349f2bcc7bc39d20dae843-import { type Box } from \"./hub\";\nexport declare const v1: Box;\n","impliedNodeFormat":1},{"version":"e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();","signature":"98fcb466a47fe77af3e9e64075a4babb-import { type Box } from \"./hub\";\nexport declare const v2: Box;\n","impliedNodeFormat":1},{"version":"232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();","signature":"aa588b20252b0aa2ee120db08bb75421-import { type Box } from \"./hub\";\nexport declare const v3: Box;\n","impliedNodeFormat":1}],"fileIdsList":[[2]],"options":{"module":99,"strict":true},"referencedMap":[[3,1],[4,1],[5,1]],"affectedFilesPendingEmit":[2,3,4,5]}
 //// [/home/src/workspaces/project/tsconfig.tsbuildinfo.readable.baseline.txt] *modified* 
 {
   "version": "FakeTSVersion",
@@ -238,20 +232,35 @@ Output::
     {
       "fileName": "./spoke1.ts",
       "version": "1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();",
-      "signature": "1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();",
-      "impliedNodeFormat": "CommonJS"
+      "signature": "556c60ab8e349f2bcc7bc39d20dae843-import { type Box } from \"./hub\";\nexport declare const v1: Box;\n",
+      "impliedNodeFormat": "CommonJS",
+      "original": {
+        "version": "1582891c712fced00e90716355a68871-import { make, type Box } from \"./hub\"; export const v1: Box = make();",
+        "signature": "556c60ab8e349f2bcc7bc39d20dae843-import { type Box } from \"./hub\";\nexport declare const v1: Box;\n",
+        "impliedNodeFormat": 1
+      }
     },
     {
       "fileName": "./spoke2.ts",
       "version": "e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();",
-      "signature": "e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();",
-      "impliedNodeFormat": "CommonJS"
+      "signature": "98fcb466a47fe77af3e9e64075a4babb-import { type Box } from \"./hub\";\nexport declare const v2: Box;\n",
+      "impliedNodeFormat": "CommonJS",
+      "original": {
+        "version": "e199cb27f399c4d3190d9652f99b3890-import { make, type Box } from \"./hub\"; export const v2: Box = make();",
+        "signature": "98fcb466a47fe77af3e9e64075a4babb-import { type Box } from \"./hub\";\nexport declare const v2: Box;\n",
+        "impliedNodeFormat": 1
+      }
     },
     {
       "fileName": "./spoke3.ts",
       "version": "232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();",
-      "signature": "232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();",
-      "impliedNodeFormat": "CommonJS"
+      "signature": "aa588b20252b0aa2ee120db08bb75421-import { type Box } from \"./hub\";\nexport declare const v3: Box;\n",
+      "impliedNodeFormat": "CommonJS",
+      "original": {
+        "version": "232b947ef5595e7d8d513f6dce1bb820-import { make, type Box } from \"./hub\"; export const v3: Box = make();",
+        "signature": "aa588b20252b0aa2ee120db08bb75421-import { type Box } from \"./hub\";\nexport declare const v3: Box;\n",
+        "impliedNodeFormat": 1
+      }
     }
   ],
   "fileIdsList": [
@@ -296,11 +305,17 @@ Output::
       5
     ]
   ],
-  "size": 1699
+  "size": 2149
 }
 
 tsconfig.json::
 SemanticDiagnostics::
 *refresh*    /home/src/workspaces/project/hub.ts
+*refresh*    /home/src/workspaces/project/spoke1.ts
+*refresh*    /home/src/workspaces/project/spoke2.ts
+*refresh*    /home/src/workspaces/project/spoke3.ts
 Signatures::
 (computed .d.ts) /home/src/workspaces/project/hub.ts
+(computed .d.ts) /home/src/workspaces/project/spoke1.ts
+(computed .d.ts) /home/src/workspaces/project/spoke2.ts
+(computed .d.ts) /home/src/workspaces/project/spoke3.ts

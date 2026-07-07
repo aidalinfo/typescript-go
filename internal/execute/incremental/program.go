@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/microsoft/typescript-go/internal/ast"
 	"github.com/microsoft/typescript-go/internal/collections"
@@ -33,6 +35,11 @@ type Program struct {
 
 	// Testing data
 	testingData *TestingData
+
+	nestedEmitMu    sync.Mutex
+	nestedEmitDepth int
+	nestedEmitStart time.Time
+	nestedEmitTime  time.Duration
 }
 
 var _ compiler.ProgramLike = (*Program)(nil)
@@ -65,6 +72,32 @@ type TestingData struct {
 
 func (p *Program) GetTestingData() *TestingData {
 	return p.testingData
+}
+
+func (p *Program) beginNestedEmit() func() {
+	p.nestedEmitMu.Lock()
+	if p.nestedEmitDepth == 0 {
+		p.nestedEmitStart = time.Now()
+	}
+	p.nestedEmitDepth++
+	p.nestedEmitMu.Unlock()
+
+	return func() {
+		p.nestedEmitMu.Lock()
+		defer p.nestedEmitMu.Unlock()
+		p.nestedEmitDepth--
+		if p.nestedEmitDepth == 0 {
+			p.nestedEmitTime += time.Since(p.nestedEmitStart)
+		}
+	}
+}
+
+func (p *Program) TakeNestedEmitTime() time.Duration {
+	p.nestedEmitMu.Lock()
+	defer p.nestedEmitMu.Unlock()
+	nestedEmitTime := p.nestedEmitTime
+	p.nestedEmitTime = 0
+	return nestedEmitTime
 }
 
 func (p *Program) panicIfNoProgram(method string) {
@@ -305,10 +338,6 @@ func (p *Program) emitBuildInfo(ctx context.Context, options compiler.EmitOption
 	if ctx.Err() != nil {
 		return nil
 	}
-	p.ensureNoEmitSignaturesForBuildInfo(ctx)
-	if ctx.Err() != nil {
-		return nil
-	}
 	buildInfo := snapshotToBuildInfo(p.snapshot, p.program, buildInfoFileName)
 	text, err := json.Marshal(buildInfo)
 	if err != nil {
@@ -334,51 +363,6 @@ func (p *Program) emitBuildInfo(ctx context.Context, options compiler.EmitOption
 		EmitSkipped:  false,
 		EmittedFiles: []string{buildInfoFileName},
 	}
-}
-
-func (p *Program) ensureNoEmitSignaturesForBuildInfo(ctx context.Context) {
-	if !p.snapshot.options.NoEmit.IsTrue() || p.snapshot.options.NoCheck.IsTrue() || p.snapshot.options.IsolatedModules.IsTrue() || !p.snapshot.canUseIncrementalState() {
-		return
-	}
-
-	handler := affectedFilesHandler{ctx: ctx, program: p}
-	wg := core.NewWorkGroup(p.program.SingleThreaded())
-	for _, file := range p.program.GetSourceFiles() {
-		if file.IsDeclarationFile || ast.IsJsonSourceFile(file) || !p.program.SourceFileMayBeEmitted(file, false) {
-			continue
-		}
-		info, ok := p.snapshot.fileInfos.Load(file.Path())
-		if !ok || info.signature != info.version {
-			continue
-		}
-		if !info.affectsGlobalScope && !p.hasMultipleReferencingFiles(file.Path()) {
-			continue
-		}
-		wg.Queue(func() {
-			handler.updateShapeSignature(file, false)
-		})
-	}
-	wg.RunAndWait()
-	handler.updatedSignatures.Range(func(filePath tspath.Path, update *updatedSignature) bool {
-		if info, ok := p.snapshot.fileInfos.Load(filePath); ok {
-			info.signature = update.signature
-			if p.testingData != nil {
-				p.testingData.UpdatedSignatureKinds[filePath] = update.kind
-			}
-		}
-		return true
-	})
-}
-
-func (p *Program) hasMultipleReferencingFiles(path tspath.Path) bool {
-	count := 0
-	for range p.snapshot.referencedMap.getReferencedBy(path) {
-		count++
-		if count > 1 {
-			return true
-		}
-	}
-	return false
 }
 
 func (p *Program) ensureHasErrorsForState(ctx context.Context, program *compiler.Program) {
