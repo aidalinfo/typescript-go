@@ -3100,7 +3100,27 @@ func (r *Relater) recursiveTypeRelatedTo(source *Type, target *Type, reportError
 			return TernaryMaybe
 		}
 	}
-	if len(r.sourceStack) == 100 || len(r.targetStack) == 100 {
+	deepSource := len(r.sourceStack) == 100
+	deepTarget := len(r.targetStack) == 100
+	if deepSource || deepTarget {
+		// One-sided depth overflow — one stack unrolls to the limit while the
+		// other stays shallow — is the signature of an ordering-induced growing
+		// recursion (e.g. the `UnionToTuple`/`Exclude` family from #929 / #1730 /
+		// #4465, or a `MaxTuple`-style route-union scoring). Those reports trace
+		// to the stable (alphabetical) type ordering — reproducible on tsc with
+		// `--stableTypeOrdering` — under which the growing tuple keeps minting
+		// fresh arity-specific recursion identities, so `isDeeplyNestedType`
+		// never trips and the comparison runs to the hard limit. Under tsc's
+		// creation-order sort these converge and are treated as related. Assume
+		// related here — matching tsc's observable result — rather than emitting
+		// a spurious TS2321. Genuine two-sided deep comparisons still overflow.
+		shallow := len(r.sourceStack)
+		if deepSource {
+			shallow = len(r.targetStack)
+		}
+		if deepSource != deepTarget && shallow < 16 {
+			return TernaryMaybe
+		}
 		r.overflow = true
 		return TernaryFalse
 	}
